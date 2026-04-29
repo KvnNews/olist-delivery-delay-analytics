@@ -50,13 +50,9 @@ Principais métricas:
 
 O projeto gera um painel interativo em `dashboard.html`.
 
-### Capturas do Dashboard
+### Captura do Dashboard
 
-![Dashboard - visão geral](dashboard-screenshot-01.png)
-
-![Dashboard - estados e categorias](dashboard-screenshot-02.png)
-
-> Substitua os arquivos acima pelos prints reais do dashboard gerado.
+![Dashboard](dashboard.png)
 
 ## 🤖 Modelo Preditivo
 

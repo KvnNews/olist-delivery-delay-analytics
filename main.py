@@ -420,13 +420,18 @@ def build_dashboard(metrics: dict[str, object], order_base: pd.DataFrame, monito
       .charts { display: grid; gap: 24px; width: 100%; }
       .chart-card, .table-card, .kpi-card, .insight-block { width: 100%; }
       .chart-card { background: #ffffff; border-radius: 22px; padding: 22px; box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08); }
+      .chart-card.main-chart { min-height: 440px; }
       .chart-card h2 { margin: 0 0 16px; font-size: 1.1rem; }
-      .table-card { background: #ffffff; border-radius: 22px; padding: 22px; box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08); margin-top: 24px; }
-      table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+      .table-card { background: #ffffff; border-radius: 22px; padding: 22px; box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08); }
+      .table-card table { width: 100%; border-collapse: collapse; margin-top: 12px; }
       th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #e2e8f0; }
       th { background: #f8fafc; color: #334155; font-weight: 700; }
       tbody tr:hover { background: #f8fafc; }
-      .grid-two { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+      .chart-split { display: grid; grid-template-columns: 1.7fr 1fr; gap: 24px; }
+      .left-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+      .right-column { display: grid; gap: 24px; }
+      .right-column .chart-card { min-height: 240px; }
+      .right-column .table-card { min-height: 520px; }
       .plotly-graph-div, .plotly-graph-div svg, .plotly-graph-div .main-svg { width: 100% !important; }
       .js-plotly-plot, .js-plotly-plot > div { width: 100% !important; }
       .filter-panel { background: #ffffff; padding: 20px; border-radius: 20px; box-shadow: 0 14px 40px rgba(31, 42, 55, 0.08); margin-bottom: 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
@@ -438,8 +443,7 @@ def build_dashboard(metrics: dict[str, object], order_base: pd.DataFrame, monito
       .filter-actions button:hover { transform: translateY(-1px); background: #1d4ed8; }
       .monitoring-card { background: #ffffff; border-radius: 22px; padding: 22px; box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08); margin-top: 24px; }
       .monitoring-card h3 { margin: 0 0 12px; font-size: 1.1rem; }
-      .grid-two { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-      @media(max-width: 1200px) { .grid-two { grid-template-columns: 1fr; } }
+      @media(max-width: 1200px) { .chart-split, .left-grid { grid-template-columns: 1fr; } }
       @media(max-width: 960px) { .kpi-grid, .insights { grid-template-columns: 1fr; } }
     """
 
@@ -462,20 +466,20 @@ def build_dashboard(metrics: dict[str, object], order_base: pd.DataFrame, monito
         f.write(summary_cards)
         f.write(monitoring_html)
         f.write("<div class='charts'>")
-        f.write("<div class='chart-card'>" + fig_revenue_time.to_html(include_plotlyjs=False, full_html=False, config={'responsive': True}, div_id='revenue_time_chart') + "</div>")
-        f.write("<div class='grid-two'>")
+        f.write("<div class='chart-card main-chart'>" + fig_revenue_time.to_html(include_plotlyjs=False, full_html=False, config={'responsive': True}, div_id='revenue_time_chart') + "</div>")
+        f.write("<div class='chart-split'>")
+        f.write("<div class='left-grid'>")
         f.write("<div class='chart-card'>" + fig_state.to_html(include_plotlyjs=False, full_html=False, config={'responsive': True}, div_id='state_revenue_chart') + "</div>")
         f.write("<div class='chart-card'>" + fig_category.to_html(include_plotlyjs=False, full_html=False, config={'responsive': True}, div_id='category_revenue_chart') + "</div>")
-        f.write("</div>")
-        f.write("<div class='grid-two'>")
-        f.write("<div class='chart-card'>" + fig_delay_state.to_html(include_plotlyjs=False, full_html=False, config={'responsive': True}, div_id='delay_state_chart') + "</div>")
-        f.write("<div class='chart-card'>" + fig_purchase_month.to_html(include_plotlyjs=False, full_html=False, config={'responsive': True}, div_id='purchase_month_chart') + "</div>")
-        f.write("</div>")
-        f.write("<div class='grid-two'>")
         f.write("<div class='chart-card'>" + fig_delivery_time.to_html(include_plotlyjs=False, full_html=False, config={'responsive': True}, div_id='delivery_time_chart') + "</div>")
         f.write("<div class='chart-card'>" + fig_review.to_html(include_plotlyjs=False, full_html=False, config={'responsive': True}, div_id='review_score_chart') + "</div>")
         f.write("</div>")
+        f.write("<div class='right-column'>")
+        f.write("<div class='chart-card'>" + fig_delay_state.to_html(include_plotlyjs=False, full_html=False, config={'responsive': True}, div_id='delay_state_chart') + "</div>")
+        f.write("<div class='chart-card'>" + fig_purchase_month.to_html(include_plotlyjs=False, full_html=False, config={'responsive': True}, div_id='purchase_month_chart') + "</div>")
         f.write(delay_table)
+        f.write("</div>")
+        f.write("</div>")
         f.write("</div>")
         f.write("</div>")
         f.write("<script>\n")
